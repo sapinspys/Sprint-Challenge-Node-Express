@@ -5,16 +5,16 @@ const projects = require("../data/helpers/projectModel.js");
 
 const router = express.Router();
 
-// Creates a post using the information sent inside the `request body`.
+// Creates a project using the information sent inside the `request body`. CREATE.
 router.post("/", async (req, res) => {
   try {
-    if (!req.body.text || !req.body.user_id) {
+    if (!req.body.name || !req.body.description) {
       res.status(400).json({
-        errorMessage: "Please provide text and user id for the post."
+        errorMessage: "Please provide project name and a description."
       });
     } else {
-      const newPost = await projects.insert(req.body);
-      res.status(201).json(newPost);
+      const newProject = await projects.insert(req.body);
+      res.status(201).json(newProject);
     }
   } catch (error) {
     console.log(error);
@@ -24,11 +24,11 @@ router.post("/", async (req, res) => {
   }
 });
 
-// Returns an array of all the post objects contained in the database.
+// Returns an array of all the project objects contained in the database. READ.
 router.get("/", async (req, res) => {
   try {
-    const users = await projects.get();
-    res.status(200).json(users);
+    const projects = await projects.get();
+    res.status(200).json(projects);
   } catch (error) {
     console.log(error);
     res.status(500).json({ error: "The posts could not be retrieved." });
