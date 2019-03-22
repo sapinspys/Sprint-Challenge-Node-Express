@@ -2,6 +2,7 @@ const express = require("express");
 
 // Custom imports
 const actions = require("../data/helpers/actionModel.js");
+const projects = require("../data/helpers/projectModel.js");
 
 const router = express.Router();
 
@@ -13,8 +14,9 @@ router.post("/", async (req, res) => {
         errorMessage: "Please provide project id, action description, and notes."
       });
     } else {
-      const newAction = await actions.insert(req.body);
-      if (newAction) {
+      const foundAction = await projects.get(req.body.project_id);
+      if (foundAction) {
+        const newAction = await actions.insert(req.body);
         res.status(201).json(newAction);
       } else {
         res
