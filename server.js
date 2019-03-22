@@ -23,7 +23,7 @@ server.use(function(req, res, next) {
 server.use(cors());
 
 server.get("/", (req, res) => {
-  res.send("Hello from the WEB API III Challenge server!");
+  res.send("Hello from Guillermo's Sprint Challenge #11 server!");
 });
 
 // ROUTE HANDLERS ARE ALSO MIDDLEWARE
@@ -34,7 +34,7 @@ server.use("/api/actions", actionsRouter);
 server.use(function(req, res) {
   res
     .status(404)
-    .send("This route does not exist. Ain't nobody got time for that!");
+    .send("This route does not exist. Try /api/projects or /api/actions");
 });
 
 module.exports = server;
