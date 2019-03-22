@@ -19,7 +19,7 @@ router.post("/", async (req, res) => {
   } catch (error) {
     console.log(error);
     res.status(500).json({
-      error: "There was an error while saving the post to the database."
+      error: "There was an error while saving the project to the database."
     });
   }
 });
@@ -31,7 +31,7 @@ router.get("/", async (req, res) => {
     res.status(200).json(allProjects);
   } catch (error) {
     console.log(error);
-    res.status(500).json({ error: "The posts could not be retrieved." });
+    res.status(500).json({ error: "The projects could not be retrieved." });
   }
 });
 
@@ -47,7 +47,7 @@ router.put("/:id", async (req, res) => {
       if (!updatedObject) {
         res
           .status(404)
-          .json({ message: "The post with the specified ID does not exist." });
+          .json({ message: "The project with the specified ID does not exist." });
       } else {
         res.status(200).json(updatedObject);
       }
@@ -56,7 +56,7 @@ router.put("/:id", async (req, res) => {
     console.log(error);
     res
       .status(500)
-      .json({ error: "The post information could not be modified." });
+      .json({ error: "The project information could not be modified." });
   }
 });
 
@@ -75,7 +75,7 @@ router.delete("/:id", async (req, res) => {
     }
   } catch (error) {
     console.log(error);
-    res.status(500).json({ error: "The post could not be removed." });
+    res.status(500).json({ error: "The project could not be removed." });
   }
 });
 

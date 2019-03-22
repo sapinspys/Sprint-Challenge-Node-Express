@@ -5,21 +5,27 @@ const actions = require("../data/helpers/actionModel.js");
 
 const router = express.Router();
 
-// Creates a project using the information sent inside the `request body`, returns created object. CREATE.
+// Creates an action using the information sent inside the `request body`, returns created object. CREATE.
 router.post("/", async (req, res) => {
   try {
-    if (!req.body.name || !req.body.description) {
+    if (!req.body.description || !req.body.notes || !req.body.project_id) {
       res.status(400).json({
-        errorMessage: "Please provide project name and a description."
+        errorMessage: "Please provide project id, action description, and notes."
       });
     } else {
-      const newProject = await projects.insert(req.body);
-      res.status(201).json(newProject);
+      const newAction = await actions.insert(req.body);
+      if (newAction) {
+        res.status(201).json(newAction);
+      } else {
+        res
+        .status(404)
+        .json({ message: "The project with the specified ID does not exist." });
+      }
     }
   } catch (error) {
     console.log(error);
     res.status(500).json({
-      error: "There was an error while saving the post to the database."
+      error: "There was an error while saving the action to the database."
     });
   }
 });
@@ -31,7 +37,7 @@ router.get("/", async (req, res) => {
     res.status(200).json(allActions);
   } catch (error) {
     console.log(error);
-    res.status(500).json({ error: "The posts could not be retrieved." });
+    res.status(500).json({ error: "The action could not be retrieved." });
   }
 });
 
