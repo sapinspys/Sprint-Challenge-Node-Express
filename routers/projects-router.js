@@ -35,7 +35,32 @@ router.get("/", async (req, res) => {
   }
 });
 
-// Removes the project with the specified id and returns number of records deleted.
+// Updates the project with the specified `id` using data from the `request body`. Returns the modified object or null if not found. UPDATE.
+router.put("/:id", async (req, res) => {
+  try {
+    if (!req.body.name || !req.body.description) {
+      res.status(400).json({
+        errorMessage: "Please provide project name and contents to be updated."
+      });
+    } else {
+      const updatedObject = await projects.update(req.params.id, req.body);
+      if (!updatedObject) {
+        res
+          .status(404)
+          .json({ message: "The post with the specified ID does not exist." });
+      } else {
+        res.status(200).json(updatedObject);
+      }
+    }
+  } catch (error) {
+    console.log(error);
+    res
+      .status(500)
+      .json({ error: "The post information could not be modified." });
+  }
+});
+
+// Removes the project with the specified id and returns number of records deleted. DELETE.
 router.delete("/:id", async (req, res) => {
   try {
     const numProjectsDeleted = await projects.remove(req.params.id);
