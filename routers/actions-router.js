@@ -27,7 +27,7 @@ router.post("/", async (req, res) => {
   } catch (error) {
     console.log(error);
     res.status(500).json({
-      error: "There was an error while saving the action to the database."
+      error: "There was an error while saving the action to the database or the project with the specified ID does not exist."
     });
   }
 });
@@ -46,16 +46,16 @@ router.get("/", async (req, res) => {
 // Updates the project with the specified `id` using data from the `request body`. Returns the modified object or null if not found. UPDATE.
 router.put("/:id", async (req, res) => {
   try {
-    if (!req.body.name || !req.body.description) {
+    if (!req.body.description || !req.body.notes) {
       res.status(400).json({
-        errorMessage: "Please provide project name and contents to be updated."
+        errorMessage: "Please provide action description and notes."
       });
     } else {
-      const updatedObject = await projects.update(req.params.id, req.body);
+      const updatedObject = await actions.update(req.params.id, req.body);
       if (!updatedObject) {
         res
           .status(404)
-          .json({ message: "The post with the specified ID does not exist." });
+          .json({ message: "The action with the specified ID does not exist." });
       } else {
         res.status(200).json(updatedObject);
       }
