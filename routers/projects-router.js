@@ -1,14 +1,14 @@
 const express = require("express");
 
 // Custom imports
-const postsDb = require("../data/helpers/postDb.js");
+const projects = require("../data/helpers/projectModel.js");
 
 const router = express.Router();
 
 // Returns an array of all the post objects contained in the database.
 router.get("/", async (req, res) => {
   try {
-    const users = await postsDb.get();
+    const users = await projects.get();
     res.status(200).json(users);
   } catch (error) {
     console.log(error);
@@ -24,7 +24,7 @@ router.post("/", async (req, res) => {
         errorMessage: "Please provide text and user id for the post."
       });
     } else {
-      const newPost = await postsDb.insert(req.body);
+      const newPost = await projects.insert(req.body);
       res.status(201).json(newPost);
     }
   } catch (error) {

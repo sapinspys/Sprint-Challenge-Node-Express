@@ -1,7 +1,7 @@
 const express = require("express");
 
 // Custom imports
-const usersDb = require("../data/helpers/userDb.js");
+const actions = require("../data/helpers/actionModel.js");
 
 const router = express.Router();
 
@@ -28,7 +28,7 @@ router.post("/", async (req, res) => {
         errorMessage: "Please provide the new user's name."
       });
     } else {
-      const newUser = await usersDb.insert(req.body);
+      const newUser = await actions.insert(req.body);
       res.status(201).json(newUser);
     }
   } catch (error) {
@@ -42,7 +42,7 @@ router.post("/", async (req, res) => {
 // Retrieve the list of `posts` for a `user`.
 router.get("/:id/posts", async (req, res) => {
   try {
-    const posts = await usersDb.getUserPosts(req.params.id); // returns posts found for user
+    const posts = await actions.getUserPosts(req.params.id); // returns posts found for user
     if (!posts.length) {
       res
         .status(404)
@@ -64,7 +64,7 @@ router.get("/:id/posts", async (req, res) => {
 // Returns an array of all the users contained in the database.
 router.get("/", async (req, res) => {
   try {
-    const users = await usersDb.get();
+    const users = await actions.get();
     res.status(200).json(users);
   } catch (error) {
     console.log(error);
@@ -75,7 +75,7 @@ router.get("/", async (req, res) => {
 // Returns a specific user by ID.
 router.get("/:id", async (req, res) => {
   try {
-    const user = await usersDb.getById(req.params.id);
+    const user = await actions.getById(req.params.id);
     if (!(typeof user === 'object')) {
       res
         .status(404)
