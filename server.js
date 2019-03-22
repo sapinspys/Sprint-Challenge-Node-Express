@@ -34,7 +34,7 @@ server.use("/api/actions", actionsRouter);
 server.use(function(req, res) {
   res
     .status(404)
-    .send("This route does not exist. Try /api/projects or /api/actions");
+    .send("This route does not exist. Try /api/projects or /api/actions.");
 });
 
 module.exports = server;

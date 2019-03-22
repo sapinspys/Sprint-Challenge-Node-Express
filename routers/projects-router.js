@@ -5,7 +5,7 @@ const projects = require("../data/helpers/projectModel.js");
 
 const router = express.Router();
 
-// Creates a project using the information sent inside the `request body`. CREATE.
+// Creates a project using the information sent inside the `request body`, returns created object. CREATE.
 router.post("/", async (req, res) => {
   try {
     if (!req.body.name || !req.body.description) {
@@ -35,7 +35,24 @@ router.get("/", async (req, res) => {
   }
 });
 
-
+// Removes the project with the specified id and returns number of records deleted.
+router.delete("/:id", async (req, res) => {
+  try {
+    const numProjectsDeleted = await projects.remove(req.params.id);
+    if (!numProjectsDeleted) {
+      res
+        .status(404)
+        .json({ message: "The post with the specified ID does not exist." });
+    } else {
+      res
+        .status(200)
+        .json({ message: `Successfully deleted project ${req.params.id}.` });
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: "The post could not be removed." });
+  }
+});
 
 // CODE BELOW FOR REFERENCE ONLY
 
