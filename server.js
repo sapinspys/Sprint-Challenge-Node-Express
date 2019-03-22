@@ -1,7 +1,7 @@
 const express = require("express");
 
-const usersRouter = require("./routers/users-router.js");
-const postsRouter = require("./routers/posts-router.js");
+const projectsRouter = require("./routers/projects-router.js/index.js");
+const actionsRouter = require("./routers/actions-router.js");
 
 const helmet = require("helmet");
 const cors = require("cors");
@@ -27,8 +27,8 @@ server.get("/", (req, res) => {
 });
 
 // ROUTE HANDLERS ARE ALSO MIDDLEWARE
-server.use("/api/users", usersRouter);
-server.use("/api/posts", postsRouter);
+server.use("/api/projects", projectsRouter);
+server.use("/api/actions", actionsRouter);
 
 // CUSTOM MIDDLEWARE!
 server.use(function(req, res) {
