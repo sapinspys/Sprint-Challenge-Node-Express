@@ -27,8 +27,8 @@ router.post("/", async (req, res) => {
 // Returns an array of all the project objects contained in the database. READ.
 router.get("/", async (req, res) => {
   try {
-    const projects = await projects.get();
-    res.status(200).json(projects);
+    const allProjects = await projects.get();
+    res.status(200).json(allProjects);
   } catch (error) {
     console.log(error);
     res.status(500).json({ error: "The posts could not be retrieved." });
