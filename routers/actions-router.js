@@ -5,31 +5,16 @@ const actions = require("../data/helpers/actionModel.js");
 
 const router = express.Router();
 
-// CUSTOM MIDDLEWARE (CAPITALIZE IF STRING)
-router.use(function(req, res, next) {
-  if ((req.method === 'POST' || req.method === 'PUT') && req.body.name) {
-    let upperCaseArray = []
-
-    for (name of req.body.name.split(' ')) {
-      upperCaseArray.push(name.charAt(0).toUpperCase() + name.slice(1));
-    }
-
-    req.body.name = upperCaseArray.join(' ')
-  }
-
-  next();
-});
-
-// Creates a new user.
+// Creates a project using the information sent inside the `request body`, returns created object. CREATE.
 router.post("/", async (req, res) => {
   try {
-    if (!req.body.name) {
+    if (!req.body.name || !req.body.description) {
       res.status(400).json({
-        errorMessage: "Please provide the new user's name."
+        errorMessage: "Please provide project name and a description."
       });
     } else {
-      const newUser = await actions.insert(req.body);
-      res.status(201).json(newUser);
+      const newProject = await projects.insert(req.body);
+      res.status(201).json(newProject);
     }
   } catch (error) {
     console.log(error);
@@ -39,55 +24,58 @@ router.post("/", async (req, res) => {
   }
 });
 
-// Retrieve the list of `posts` for a `user`.
-router.get("/:id/posts", async (req, res) => {
-  try {
-    const posts = await actions.getUserPosts(req.params.id); // returns posts found for user
-    if (!posts.length) {
-      res
-        .status(404)
-        .json({
-          message:
-            "The post with the specified ID does not exist or this user has no posts."
-        });
-    } else {
-      res.status(200).json(posts);
-    }
-  } catch (error) {
-    console.log(error);
-    res
-      .status(500)
-      .json({ error: "The posts information could not be retrieved." });
-  }
-});
-
-// Returns an array of all the users contained in the database.
+// Returns an array of all the action objects contained in the database. READ.
 router.get("/", async (req, res) => {
   try {
-    const users = await actions.get();
-    res.status(200).json(users);
+    const allActions = await actions.get();
+    res.status(200).json(allActions);
   } catch (error) {
     console.log(error);
     res.status(500).json({ error: "The posts could not be retrieved." });
   }
 });
 
-// Returns a specific user by ID.
-router.get("/:id", async (req, res) => {
+// Updates the project with the specified `id` using data from the `request body`. Returns the modified object or null if not found. UPDATE.
+router.put("/:id", async (req, res) => {
   try {
-    const user = await actions.getById(req.params.id);
-    if (!(typeof user === 'object')) {
-      res
-        .status(404)
-        .json({ message: "The post with the specified ID does not exist." });
+    if (!req.body.name || !req.body.description) {
+      res.status(400).json({
+        errorMessage: "Please provide project name and contents to be updated."
+      });
     } else {
-      res.status(200).json(user);
+      const updatedObject = await projects.update(req.params.id, req.body);
+      if (!updatedObject) {
+        res
+          .status(404)
+          .json({ message: "The post with the specified ID does not exist." });
+      } else {
+        res.status(200).json(updatedObject);
+      }
     }
   } catch (error) {
     console.log(error);
     res
       .status(500)
-      .json({ error: "The posts information could not be retrieved." });
+      .json({ error: "The post information could not be modified." });
+  }
+});
+
+// Removes the project with the specified id and returns number of records deleted. DELETE.
+router.delete("/:id", async (req, res) => {
+  try {
+    const numProjectsDeleted = await projects.remove(req.params.id);
+    if (!numProjectsDeleted) {
+      res
+        .status(404)
+        .json({ message: "The post with the specified ID does not exist." });
+    } else {
+      res
+        .status(200)
+        .json({ message: `Successfully deleted project ${req.params.id}.` });
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: "The post could not be removed." });
   }
 });
 
