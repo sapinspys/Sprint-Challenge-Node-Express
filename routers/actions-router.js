@@ -68,22 +68,22 @@ router.put("/:id", async (req, res) => {
   }
 });
 
-// Removes the project with the specified id and returns number of records deleted. DELETE.
+// Removes the action with the specified id and returns number of records deleted. DELETE.
 router.delete("/:id", async (req, res) => {
   try {
-    const numProjectsDeleted = await projects.remove(req.params.id);
-    if (!numProjectsDeleted) {
+    const numActionsDeleted = await actions.remove(req.params.id);
+    if (!numActionsDeleted) {
       res
         .status(404)
         .json({ message: "The post with the specified ID does not exist." });
     } else {
       res
         .status(200)
-        .json({ message: `Successfully deleted project ${req.params.id}.` });
+        .json({ message: `Successfully deleted action ${req.params.id}.` });
     }
   } catch (error) {
     console.log(error);
-    res.status(500).json({ error: "The post could not be removed." });
+    res.status(500).json({ error: "The action could not be removed." });
   }
 });
 
